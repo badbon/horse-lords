@@ -13,12 +13,7 @@ public class HorseAnimator : MonoBehaviour
     {
         StartCoroutine(AnimateHorse());
     }
-
-    void Update()
-    {
- 
-    }
-
+    
     // Coroutine to animate horse from sprites
     IEnumerator AnimateHorse()
     {

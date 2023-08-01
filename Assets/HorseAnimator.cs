@@ -4,15 +4,31 @@ using UnityEngine;
 
 public class HorseAnimator : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public Sprite[] sprites;
+    public bool animate = true;
+    public SpriteRenderer spriteRenderer;
+    public float speed = 0.05f;
+
     void Start()
     {
-        
+        StartCoroutine(AnimateHorse());
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+ 
+    }
+
+    // Coroutine to animate horse from sprites
+    IEnumerator AnimateHorse()
+    {
+        while (animate)
+        {
+            for (int i = 0; i < sprites.Length; i++)
+            {
+                spriteRenderer.sprite = sprites[i];
+                yield return new WaitForSeconds(speed);
+            }
+        }
     }
 }

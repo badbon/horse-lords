@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,27 +7,73 @@ public class HorseController : MonoBehaviour
 {
     // Mouse Controls the player
     public float moveSpeed = 5f;
+    public float rotationClamp = 70f;
+    public Vector3 mousePos;
+    public bool canFireSpear = true;
+    public GameObject spearObject;
+    public float spearTimer = 0.5f;
+    public float health = 10f;
 
-    void Start()
+    public void FireSpear()
     {
-        
+        if(canFireSpear)
+        {
+            canFireSpear = false;
+            GameObject spear = Instantiate(spearObject, transform.position, transform.rotation);
+            spear.GetComponent<Spear>().horse = this;
+            StartCoroutine(ResetFireSpear());
+        }
+
+    }
+
+    public IEnumerator ResetFireSpear()
+    {
+        yield return new WaitForSeconds(spearTimer);
+        canFireSpear = true;
+    }
+
+    internal void Knockback(float knockback, float knockbackAngle, Vector3 position)
+    {
+        //Debug.Log("Knockback");
+        Vector2 difference = transform.position - position;
+        difference = difference.normalized * knockback;
+
+        GetComponent<Rigidbody2D>().AddForce(difference, ForceMode2D.Impulse);
+    }
+
+    internal void TakeDamage(float damage)
+    {
+        health -= damage;
+        if(health <= 0)
+        {
+            Debug.Log("Horse is dead. rip horse.");
+            Destroy(gameObject);
+        }
     }
 
     void Update()
     {
         // Get the mouse position
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePos = Input.mousePosition;
+        mousePos.z = 10; // select distance = 10 units from the camera
+        Vector3 stw = Camera.main.ScreenToWorldPoint(mousePos);
 
-        // Get the direction the player should face
-        Vector3 direction = mousePos - transform.position;
+        // Move player towards the mouse
+        transform.position = Vector2.MoveTowards(transform.position, stw, moveSpeed * Time.deltaTime);
 
-        // Get the angle the player should face
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        // Rotate player towards the mouse
+        Vector3 difference = stw - transform.position;
+        float rotationZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, 0f, rotationZ);
 
-        // Rotate the player
-        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        // Clamp rotation
+        transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Clamp(rotationZ, -rotationClamp, rotationClamp));
 
-        // Move towards the mouse
-        transform.position = Vector2.MoveTowards(transform.position, mousePos, moveSpeed * Time.deltaTime);   
+
+        // Fire spear projectile
+        if (Input.GetMouseButtonDown(0))
+        {
+            FireSpear();
+        }
     }
 }

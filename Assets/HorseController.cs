@@ -32,16 +32,16 @@ public class HorseController : MonoBehaviour
         canFireSpear = true;
     }
 
-    internal void Knockback(float knockback, float knockbackAngle, Vector3 position)
+    public void Knockback(float knockback, float knockbackAngle, Vector3 position)
     {
-        //Debug.Log("Knockback");
+        Debug.Log("Knockback");
         Vector2 difference = transform.position - position;
         difference = difference.normalized * knockback;
 
         GetComponent<Rigidbody2D>().AddForce(difference, ForceMode2D.Impulse);
     }
 
-    internal void TakeDamage(float damage)
+    public void TakeDamage(float damage)
     {
         health -= damage;
         if(health <= 0)

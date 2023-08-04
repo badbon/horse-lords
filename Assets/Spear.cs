@@ -28,7 +28,7 @@ public class Spear : MonoBehaviour
         
     }
 
-    private void HitPlayer()
+    public void HitPlayer()
     {
         //Debug.Log("Hit Player");
         horse.TakeDamage(damage);

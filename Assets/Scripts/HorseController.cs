@@ -23,7 +23,6 @@ public class HorseController : MonoBehaviour
             spear.GetComponent<Spear>().horse = this;
             StartCoroutine(ResetFireSpear());
         }
-
     }
 
     public IEnumerator ResetFireSpear()
@@ -37,7 +36,6 @@ public class HorseController : MonoBehaviour
         Debug.Log("Knockback");
         Vector2 difference = transform.position - position;
         difference = difference.normalized * knockback;
-
         GetComponent<Rigidbody2D>().AddForce(difference, ForceMode2D.Impulse);
     }
 
@@ -56,19 +54,17 @@ public class HorseController : MonoBehaviour
         // Get the mouse position
         mousePos = Input.mousePosition;
         mousePos.z = 10; // select distance = 10 units from the camera
-        Vector3 stw = Camera.main.ScreenToWorldPoint(mousePos);
+        Vector3 movePoint = Camera.main.ScreenToWorldPoint(mousePos);
 
         // Move player towards the mouse
-        transform.position = Vector2.MoveTowards(transform.position, stw, moveSpeed * Time.deltaTime);
+        transform.position = Vector2.MoveTowards(transform.position, movePoint, moveSpeed * Time.deltaTime);
 
         // Rotate player towards the mouse
-        Vector3 difference = stw - transform.position;
+        Vector3 difference = movePoint - transform.position;
         float rotationZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, rotationZ);
-
         // Clamp rotation
         transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Clamp(rotationZ, -rotationClamp, rotationClamp));
-
 
         // Fire spear projectile
         if (Input.GetMouseButtonDown(0))

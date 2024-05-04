@@ -19,18 +19,14 @@ public class Spear : MonoBehaviour
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         transform.Translate(Vector2.right * speed * Time.deltaTime);
         StartCoroutine(DestroyAfterSecondsCoroutine());
-
-        
     }
 
     public void HitPlayer()
     {
-        //Debug.Log("Hit Player");
         horse.TakeDamage(damage);
         horse.Knockback(knockback, knockbackAngle, horse.transform.position);
         Instantiate(hitEffect, transform.position, transform.rotation);

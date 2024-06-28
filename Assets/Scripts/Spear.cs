@@ -13,11 +13,6 @@ public class Spear : MonoBehaviour
     public float knockbackDelay = 0.05f;
     public float knockbackAngle = 90f;
     public GameObject hitEffect;
-    
-    void Start()
-    {
-        
-    }
 
     void Update()
     {
